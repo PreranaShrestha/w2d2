@@ -5,8 +5,12 @@
 </head>
 <body>
     <%-include('partials/_header.ejs')%>
-    <% for(var key in urls) { %>
-    <a href = <%= urls[key] %> > <%= key %> <br> </a>
-    <% } %>
+      <% for(var key in urls) { %>
+      <form action = "/urls/<%= key %>/delete" method = "POST" style = "margin:150px;">
+          <a href = <%= urls[key] %> > <%= key %></a>
+          <a href = "urls/<%= key %>/update" > edit </a>
+          <button type="submit" value="Delete">Delete</button></br>
+        </form>
+      <% } %>
 </body>
 </html>
