@@ -39,7 +39,7 @@ app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
-  res.redirect("/urls/" + shortURL);         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls");
 });
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id,
@@ -54,7 +54,8 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 app.post("/urls/:id/update", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
-  res.redirect("/urls");         // Respond with 'Ok' (we will replace this)
+  res.redirect("/urls");
+  console.log(urlDatabase);       // Respond with 'Ok' (we will replace this)
 });
 
 
