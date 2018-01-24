@@ -1,7 +1,15 @@
 <header>
-  <form method="POST" action="/urls/login">
-    <label for="username">Username</label>
-    <input type="text" name="username">
-    <button type="submit" value="submit">Submit</button>
-  </form>
+  <% if(username === "undefined") {%>
+     <form method="POST" action="/urls/login">
+      <label for="username">Username</label>
+      <input type="text" name="username">
+      <button type="submit" value="submit">Submit</button>
+    </form>
+  <% } else{ %>
+      <h3><%= username %></h3>
+     <form method="POST" action="/urls/logout">
+      <button type="submit" value="submit">Logout</button>
+     </form>
+  <% } %>
+
  </header>

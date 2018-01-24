@@ -18,7 +18,7 @@ app.get('/about', (req, res) => {
   res.end("About us!");
 });
 app.get('/urls/:id/update', (req, res) => {
-  res.render("urls_update", {id: req.params.id});
+  res.render("urls_update", {id: req.params.id, username: req.cookies["Username"] });
 });
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -27,11 +27,14 @@ app.get("/hello", (req, res) => {
   res.end("<html><body>Hello <b>World</b></body></html>\n");
 });
 app.get('/urls', (req, res) => {
-  let templateVars = {urls: urlDatabase};
+  let templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["Username"]
+  };
   res.render('urls_index', templateVars);
 });
 app.get('/urls/new', (req, res) => {
-  res.render('urls_new');
+  res.render('urls_new', {username: req.cookies["Username"]});
 });
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
@@ -44,8 +47,11 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls");
 });
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id,
-  urls: urlDatabase};
+  let templateVars = {
+    shortURL: req.params.id,
+    urls: urlDatabase,
+    username: req.cookies["Username"]
+  };
   res.render("url_show", templateVars);
 });
 app.post("/urls/:id/delete", (req, res) => {
@@ -61,8 +67,12 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.post("/urls/login", (req, res) =>{
-  res.cookie('Username', req.body.username,  { maxAge: 900000, httpOnly: true })
+  res.cookie('Username', req.body.username,  { maxAge: 900000, httpOnly: true });
   res.redirect("/urls")
+});
+app.post("/urls/logout", (req,res) => {
+  res.cookie('Username', "undefined");
+  res.redirect("/urls");
 });
 
 

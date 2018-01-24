@@ -6,7 +6,7 @@
 <body>
     <%-include('partials/_header.ejs')%>
       <% for(var key in urls) { %>
-      <form action = "/urls/<%= key %>/delete" method = "POST" style = "margin:150px;">
+      <form action = "/urls/<%= key %>/delete" method = "POST" style = "margin:15px;">
           <label for="shortURL"><%= key %></label>
           <a href = <%= urls[key] %> > <%= urls[key] %></a>
           <a href = "urls/<%= key %>/update" > Edit </a>
