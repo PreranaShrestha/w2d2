@@ -1,6 +1,8 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 var app = express();
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 require('dotenv').config()
@@ -56,6 +58,11 @@ app.post("/urls/:id/update", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect("/urls");
   console.log(urlDatabase);       // Respond with 'Ok' (we will replace this)
+});
+
+app.post("/urls/login", (req, res) =>{
+  res.cookie('Username', req.body.username,  { maxAge: 900000, httpOnly: true })
+  res.redirect("/urls")
 });
 
 
