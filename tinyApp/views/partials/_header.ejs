@@ -1,12 +1,15 @@
 <header>
-  <% if(!username) {%>
-     <form method="POST" action="/urls/login">
-      <label for="username">Username</label>
-      <input type="text" name="username">
-      <button type="submit" value="submit">Submit</button>
-    </form>
+  <% if(!userId) {%>
+     <h1> Login form</h1>
+        <form method="POST" action="/urls/login" style="font-size:12px; padding:10px;">
+          <label for="email">Email</label>
+          <input type="email" name="email" >
+          <label for="password">Password</label>
+          <input type="password" name="password">
+          <button type="submit">login</button>
+        </form>
   <% } else{ %>
-      <h3><%= username %></h3>
+      <h3><%= userId %></h3>
      <form method="POST" action="/urls/logout">
       <button type="submit" value="submit">Logout</button>
      </form>

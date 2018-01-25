@@ -4,7 +4,7 @@
   <title>TinyApp</title>
 </head>
 <body>
-  <% if(username) {%>
+  <% if(userId) {%>
     <%-include('partials/_header.ejs')%>
       <% for(var key in urls) { %>
       <form action = "/urls/<%= key %>/delete" method = "POST" style = "margin:15px;">
@@ -12,7 +12,7 @@
           <tr>
           <td width = "80"><label for="shortURL"><%= key %></label></td>
           <td width = "200"><a href = <%= urls[key] %> > <%= urls[key] %></a></td>
-          <td width = "80"><a href = "urls/<%= key %>/update" > Edit </a></td>
+          <td width = "80"><a href = "<%= key %>/update" > Edit </a></td>
           <td width = "20"><button type="submit" value="Delete">🗑️</button></td></br>
         </tr>
         </table>
