@@ -4,14 +4,25 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <% if(username) {%>
     <%-include('partials/_header.ejs')%>
       <% for(var key in urls) { %>
       <form action = "/urls/<%= key %>/delete" method = "POST" style = "margin:15px;">
-          <label for="shortURL"><%= key %></label>
-          <a href = <%= urls[key] %> > <%= urls[key] %></a>
-          <a href = "urls/<%= key %>/update" > Edit </a>
-          <button type="submit" value="Delete">🗑️</button></br>
+        <table>
+          <tr>
+          <td width = "80"><label for="shortURL"><%= key %></label></td>
+          <td width = "200"><a href = <%= urls[key] %> > <%= urls[key] %></a></td>
+          <td width = "80"><a href = "urls/<%= key %>/update" > Edit </a></td>
+          <td width = "20"><button type="submit" value="Delete">🗑️</button></td></br>
+        </tr>
+        </table>
         </form>
       <% } %>
+        <h2>
+          <a href="/urls/new">Add new url</a>
+        </h2>.
+      <% } else{ %>
+        <%-include('partials/_header.ejs')%>
+  <% } %>
 </body>
 </html>

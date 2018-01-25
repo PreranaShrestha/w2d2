@@ -71,7 +71,7 @@ app.post("/urls/login", (req, res) =>{
   res.redirect("/urls")
 });
 app.post("/urls/logout", (req,res) => {
-  res.cookie('Username', "undefined");
+  res.clearCookie('Username');
   res.redirect("/urls");
 });
 

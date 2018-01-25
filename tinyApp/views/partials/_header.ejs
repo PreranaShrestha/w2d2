@@ -1,5 +1,5 @@
 <header>
-  <% if(username === "undefined") {%>
+  <% if(!username) {%>
      <form method="POST" action="/urls/login">
       <label for="username">Username</label>
       <input type="text" name="username">
