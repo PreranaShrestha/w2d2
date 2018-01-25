@@ -1,9 +1,12 @@
 var express = require('express');
-var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
 var app = express();
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ["secretkey"]
+}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 require('dotenv').config()
@@ -33,7 +36,7 @@ const users = {
 //route to register
 
 app.get('/register', (req, res) => {
-  res.render("url_registration", {urls: urlDatabase, userId: req.cookies["userId"]});
+  res.render("url_registration", {urls: urlDatabase, userId: req.session.userId});
 });
 app.post('/register', (req, res) => {
   console.log(req.body);
@@ -54,7 +57,7 @@ app.post('/register', (req, res) => {
     email: req.body.email,
     password: req.body.password
     };
-    res.cookie('userId', userRandom);
+    req.session.userId = userRandom;
     res.render('urls_index', {urls: urlDatabase, userId: userRandom});
   }
 });
@@ -79,7 +82,7 @@ app.post('/urls/login', (req, res) => {
     res.status(403);
     res.send("Empty email or password");
   } else if (existEmail && existPassword) {
-    res.cookie('userId', existUserId);
+    req.session.userId = existUserId;
     res.render('urls_index', {urls: urlDatabase, userId: existUserId});
   } else {
     res.status(403);
@@ -89,14 +92,14 @@ app.post('/urls/login', (req, res) => {
 
 //route to delete
 app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.cookies["userId"]][req.params.id];
-  res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});      // Respond with 'Ok' (we will replace this)
+  delete urlDatabase[req.session.userId][req.params.id];
+  res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});      // Respond with 'Ok' (we will replace this)
 });
 
 
 //route to create
 app.get('/urls/new', (req, res) => {
-  res.render('urls_new', {urls: urlDatabase, userId: req.cookies["userId"]});
+  res.render('urls_new', {urls: urlDatabase, userId: req.session.userId});
 });
 app.post("/urls/:id/new", (req, res) => {
   const shortURL = generateRandomString();
@@ -111,19 +114,19 @@ app.post("/urls/:id/new", (req, res) => {
     // urlDatabase[req.params.id][shortURL] = longURL;
     console.log(urlDatabase);
   }
-  res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
+  res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});
 });
 
 //route to update
 app.get('/urls/:id/update', (req, res) => {
-  res.render("urls_update", {id: req.params.id, userId: req.cookies["userId"] });
+  res.render("urls_update", {id: req.params.id, userId: req.session.userId });
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.cookies["userId"]] = {};
-  urlDatabase[req.cookies["userId"]][req.params.id] = req.body.longURL;
+  urlDatabase[req.session.userId] = {};
+  urlDatabase[req.session.userId][req.params.id] = req.body.longURL;
   console.log(urlDatabase);
-  res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
+  res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});
 });
 
 //route to logout
