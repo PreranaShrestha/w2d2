@@ -23,7 +23,7 @@ const users = {
     email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
+  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
     password: "dishwasher-funk"
@@ -33,7 +33,6 @@ const users = {
 //route to register
 
 app.get('/register', (req, res) => {
-
   res.render("url_registration", {urls: urlDatabase, userId: req.cookies["userId"]});
 });
 app.post('/register', (req, res) => {
@@ -101,12 +100,17 @@ app.get('/urls/new', (req, res) => {
 });
 app.post("/urls/:id/new", (req, res) => {
   const shortURL = generateRandomString();
-  // if(urlDatabase[req.params.id] === undefined) {
-    urlDatabase[req.params.id] = {};
-  // }
+  console.log(req.params, req.body);
   const longURL = req.body.longURL;
-  urlDatabase[req.params.id][shortURL] = longURL;
-  console.log(req.params.id, longURL);
+  if(urlDatabase[req.params.id] === undefined) {
+    urlDatabase[req.params.id] = {
+    shortURL:longURL
+    }
+  } else {
+    urlDatabase[req.params.id][shortURL] = longURL;
+    // urlDatabase[req.params.id][shortURL] = longURL;
+    console.log(urlDatabase);
+  }
   res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
 });
 
