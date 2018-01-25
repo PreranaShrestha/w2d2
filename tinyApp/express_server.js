@@ -1,6 +1,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
 var app = express();
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -8,8 +9,13 @@ app.set('view engine', 'ejs');
 require('dotenv').config()
 var PORT = process.env.PORT || 8080;
 var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "userRandomID": {
+    "b2xVn2": "http://www.lighthouselabs.ca",
+    "b1xVn2": "http://www.google.ca"
+  },
+  "user2RandomID": {
+    "b2xVn2": "http://www.lighthouselabs.ca"
+  }
 };
 const users = {
   "userRandomID": {
@@ -27,7 +33,8 @@ const users = {
 //route to register
 
 app.get('/register', (req, res) => {
-  res.render("url_registration", {userId: req.cookies["userId"]});
+
+  res.render("url_registration", {urls: urlDatabase, userId: req.cookies["userId"]});
 });
 app.post('/register', (req, res) => {
   console.log(req.body);
@@ -58,8 +65,10 @@ app.post('/urls/login', (req, res) => {
   var userId;
   var existEmail;
   var existPassword;
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
   for (var user in users) {
-    if (users[user].email === req.body.email && users[user].password === req.body.password) {
+    if (users[user].email === req.body.email && bcrypt.compareSync(users[user].password, hashedPassword)) {
       existUserId = users[user].id;
       existEmail = users[user].email;
       existPassword = users[user].password;
@@ -68,42 +77,49 @@ app.post('/urls/login', (req, res) => {
   console.log(existPassword, existEmail);
   if(req.body.email === '' || req.body.password === '') {
     console.log("Email and Password cannot be empty");
-    res.status(400);
+    res.status(403);
     res.send("Empty email or password");
   } else if (existEmail && existPassword) {
     res.cookie('userId', existUserId);
     res.render('urls_index', {urls: urlDatabase, userId: existUserId});
   } else {
-    res.status(400);
+    res.status(403);
     res.send("Invalid email or password");
   }
 });
 
 //route to delete
 app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.params.id];
-  console.log(urlDatabase);
+  delete urlDatabase[req.cookies["userId"]][req.params.id];
   res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});      // Respond with 'Ok' (we will replace this)
 });
+
+
 //route to create
 app.get('/urls/new', (req, res) => {
-  res.render('urls_new', {userId: req.cookies["userId"]});
+  res.render('urls_new', {urls: urlDatabase, userId: req.cookies["userId"]});
 });
-app.post("/urls/new", (req, res) => {
+app.post("/urls/:id/new", (req, res) => {
   const shortURL = generateRandomString();
+  // if(urlDatabase[req.params.id] === undefined) {
+    urlDatabase[req.params.id] = {};
+  // }
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[req.params.id][shortURL] = longURL;
+  console.log(req.params.id, longURL);
   res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
 });
 
 //route to update
-
-app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.params.id] = req.body.longURL;
-  res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
-});
 app.get('/urls/:id/update', (req, res) => {
   res.render("urls_update", {id: req.params.id, userId: req.cookies["userId"] });
+});
+
+app.post("/urls/:id/update", (req, res) => {
+  urlDatabase[req.cookies["userId"]] = {};
+  urlDatabase[req.cookies["userId"]][req.params.id] = req.body.longURL;
+  console.log(urlDatabase);
+  res.render('urls_index', {urls: urlDatabase, userId: req.cookies["userId"]});
 });
 
 //route to logout

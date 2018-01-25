@@ -18,7 +18,14 @@
     </tr>
   </table>
     <button type = "submit" name="submit">Create Account</button>
-
+  </form>
+  <form>
+  <%  for(var ids in urls) { %>
+    <% for(var url in urls[ids]) { %>
+      <li><%= url %></li>
+      <a href = <%= urls[ids][url] %> > <%= urls[ids][url] %></a>
+    <% } %>
+  <% } %>
   </form>
 </body>
 </html>
