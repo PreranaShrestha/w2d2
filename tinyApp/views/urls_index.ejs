@@ -10,16 +10,16 @@
       <form action = "/urls/<%= url %>/delete" method = "POST" style = "margin:15px;">
         <table>
           <tr>
-          <td width = "80"><label for="shortURL"><%= url %></label></td>
-          <td width = "200"><a href = <%= urls[userId][url] %> > <%= urls[userId][url] %></a></td>
-          <td width = "80"><a href = "/urls/<%= url %>/update" > Edit </a></td>
-          <td width = "20"><button type="submit" value="Delete">🗑️</button></td></br>
-        </tr>
+            <td width = "80"><label for="shortURL"><%= url %></label></td>
+            <td width = "200"><a href = <%= urls[userId][url] %> > <%= urls[userId][url] %></a></td>
+            <td width = "80"><a href = "/urls/<%= url %>/update" > Edit </a></td>
+            <td width = "20"><button type="submit" value="Delete">🗑️</button></td></br>
+          </tr>
         </table>
-        </form>
+      </form>
       <% } %>
         <h2>
-          <a href="/urls/new">Add new url</a>
+          <a href="/urls/new">Click here to shorten your url!!</a>
         </h2>.
       <% } else{ %>
         <%-include('partials/_header.ejs')%>

@@ -131,7 +131,11 @@ app.post("/urls/:id/update", (req, res) => {
 
 //route to logout
 app.post("/urls/logout", (req,res) => {
-  res.clearCookie('userId');
+  // Session.Clear();
+  // Session.Abandon();
+  // Session.RemoveAll();
+  req.session.userId = '';
+  // res.clearCookie('userId');
   res.redirect("/register");
 });
 
