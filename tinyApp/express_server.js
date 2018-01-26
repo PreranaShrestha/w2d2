@@ -111,7 +111,6 @@ app.post("/urls/:id/new", (req, res) => {
     }
   } else {
     urlDatabase[req.params.id][shortURL] = longURL;
-    // urlDatabase[req.params.id][shortURL] = longURL;
     console.log(urlDatabase);
   }
   res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});
@@ -131,11 +130,7 @@ app.post("/urls/:id/update", (req, res) => {
 
 //route to logout
 app.post("/urls/logout", (req,res) => {
-  // Session.Clear();
-  // Session.Abandon();
-  // Session.RemoveAll();
   req.session.userId = '';
-  // res.clearCookie('userId');
   res.redirect("/register");
 });
 
