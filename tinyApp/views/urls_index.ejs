@@ -7,7 +7,7 @@
   <% if(userId) {%>
     <%-include('partials/_header.ejs')%>
       <% for(var url in urls[userId]) { %>
-      <form action = "/urls/<%= url %>/delete" method = "POST" style = "margin:15px;">
+      <form action = "/urls/<%= url %>?_method=DELETE" method = "POST" style = "margin:15px;">
         <table>
           <tr>
             <td width = "80"><label for="shortURL"><%= url %></label></td>

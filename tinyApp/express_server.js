@@ -2,22 +2,24 @@ var express = require('express');
 var cookieSession = require('cookie-session');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override');
 var app = express();
 app.use(cookieSession({
   name: 'session',
   keys: ["secretkey"]
 }));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 require('dotenv').config()
 var PORT = process.env.PORT || 8080;
 var urlDatabase = {
   "userRandomID": {
     "b2xVn2": "http://www.lighthouselabs.ca",
-    "b1xVn2": "http://www.google.ca"
+    "b1xVe2": "http://www.google.ca"
   },
   "user2RandomID": {
-    "b2xVn2": "http://www.lighthouselabs.ca"
+    "b2zVn2": "http://www.lighthouselabs.ca"
   }
 };
 const users = {
@@ -91,7 +93,7 @@ app.post('/urls/login', (req, res) => {
 });
 
 //route to delete
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id", (req, res) => {
   delete urlDatabase[req.session.userId][req.params.id];
   res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});      // Respond with 'Ok' (we will replace this)
 });
@@ -121,10 +123,9 @@ app.get('/urls/:id/update', (req, res) => {
   res.render("urls_update", {id: req.params.id, userId: req.session.userId });
 });
 
-app.post("/urls/:id/update", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   urlDatabase[req.session.userId] = {};
   urlDatabase[req.session.userId][req.params.id] = req.body.longURL;
-  console.log(urlDatabase);
   res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});
 });
 
