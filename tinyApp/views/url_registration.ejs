@@ -6,26 +6,21 @@
 <body>
   <%-include('partials/_header.ejs')%>
   <form action="/register" method = "POST">
-  <table width = "100%">
-    <tr>
-      <td> <label for="email">Email</label>
-        <input type="email" name="email"></td>
-    </tr>
-    <tr>
-      <td><label for="password">Password</label>
-        <input type="password" name="password">
-      </td>
-    </tr>
-  </table>
+    <table width = "100%">
+      <tr>
+        <td>
+          <label for="email">Email</label>
+          <input type="email" name="email">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="password">Password</label>
+          <input type="password" name="password">
+        </td>
+      </tr>
+    </table>
     <button type = "submit" name="submit">Create Account</button>
-  </form>
-  <form style="margin-left: 100px; margin-top:100px; padding:30px; font-size: 20px">
-  <%  for(var ids in urls) { %>
-    <% for(var url in urls[ids]) { %>
-      <li><%= url %>
-      <a href = <%= urls[ids][url] %> > <%= urls[ids][url] %></a></li>
-    <% } %>
-  <% } %>
   </form>
 </body>
 </html>
