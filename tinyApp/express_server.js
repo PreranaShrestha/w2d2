@@ -48,6 +48,7 @@ app.get('/', (req, res) => {
 
 });
 
+
 //route to register
 app.get('/register', (req, res) => {
   res.render("url_registration", {urls: urlDatabase, userId: req.session.userId});
@@ -93,7 +94,7 @@ app.post('/login', (req, res) => {
   var existEmail;
   var existPassword;
   const password = req.body.password;
-  const hashedPassword = bcrypt.hashSync(password, 10);   // JH sez: what?  not here!
+  const hashedPassword = bcrypt.hashSync(password, 10);
   for (var user in users) {
     if (users[user].email === req.body.email && bcrypt.compareSync(users[user].password, hashedPassword)) {
       existUserId = users[user].id;
@@ -101,7 +102,6 @@ app.post('/login', (req, res) => {
       existPassword = users[user].password;
     }
   }
-  console.log(existPassword, existEmail);
   if(req.body.email === '' || req.body.password === '') {
     console.log("Email and Password cannot be empty");
     res.status(403);
@@ -118,7 +118,7 @@ app.post('/login', (req, res) => {
 //route to delete
 app.delete("/urls/:id", (req, res) => {
   delete urlDatabase[req.session.userId][req.params.id];
-  res.redirect('/urls');      // Respond with 'Ok' (we will replace this)
+  res.redirect('/urls');
 });
 
 
@@ -145,15 +145,38 @@ app.post("/urls", (req, res) => {
   res.redirect('/urls');
 });
 
+//route to urls/:id
+app.get('/urls/:id', (req, res) => {
+  if(!req.session.userId) {
+    res.redirect('/register');
+  } else if( req.session.userId === req.params.id) {
+    res.render("urls_index", {urls: urlDatabase, userId: req.params.id});
+  }
+});
+app.post('/urls/:id', (req, res) => {
+  if(!getuser(id, req.session.userId)) {
+    res.status(403);
+    res.send("Invalid user");
+  } else {
+    urlDatabase[req.session.userId][req.params.id] = req.body.longURL;
+    res.redirect('/urls');
+  }
+});
+
+
 //route to update
 app.get('/urls/:id/update', (req, res) => {
+  if(!getUser(req.params.id, req.session.userId)) {
+    res.status(403);
+    res.send("Invalid user");
+  } else {
   res.render("urls_update", {id: req.params.id, userId: req.session.userId });
+}
 });
 
 app.put("/urls/:id", (req, res) => {
   urlDatabase[req.session.userId][req.params.id] = req.body.longURL;
   res.redirect('/urls');
-  // res.render('urls_index', {urls: urlDatabase, userId: req.session.userId});
 });
 
 //route to logout
@@ -171,16 +194,7 @@ app.get('/urls', (req, res) => {
  res.render('urls_index', {urls: urlDatabase, userId: req.session.userId });
 });
 //
-//route to urls/:id
-app.get('/urls/:id', (req, res) => {
-  if(!req.session.userId) {
-    res.redirect('/register');
-  } else if( req.session.userId === req.params.id) {
-    res.render("urls_index", {urls: urlDatabase, userId: req.params.id});
-  }
-});
-app.post('/urls/:id', (req, res) => {
-});
+
 
 
 
@@ -203,6 +217,15 @@ function fetchLongUrl(shortUrl) {
       if(urls === shortUrl) {
         return urlDatabase[users][urls];
       }
+    }
+  }
+  return false;
+}
+function getUser(id, user) {
+  for (var urls in urlDatabase[user]) {
+      console.log(urls);
+    if (urls === id) {
+      return true;
     }
   }
   return false;
