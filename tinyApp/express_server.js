@@ -147,13 +147,15 @@ app.post("/urls", (req, res) => {
 
 //route to urls/:id
 app.get('/urls/:id', (req, res) => {
-  if(!req.session.userId) {
-    res.redirect('/register');
-  } else if( req.session.userId === req.params.id) {
-    res.render("urls_index", {urls: urlDatabase, userId: req.params.id});
+  if(!getUser(req.params.id, req.session.userId)) {
+    res.status(403);
+    res.send("Invalid user");
+  } else {
+    res.render("urls_update", {id: req.params.id, userId: req.session.userId });
   }
 });
 app.post('/urls/:id', (req, res) => {
+
   if(!getuser(id, req.session.userId)) {
     res.status(403);
     res.send("Invalid user");
@@ -189,15 +191,12 @@ app.post("/logout", (req,res) => {
 app.get('/urls', (req, res) => {
   if(!req.session.userId) {
     res.status(403);
-    res.send("Invalid user");
+    res.send("Invalid urls(user/url)");
   }
  res.render('urls_index', {urls: urlDatabase, userId: req.session.userId });
 });
-//
 
-
-
-
+//listen at port 8080
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
@@ -223,11 +222,12 @@ function fetchLongUrl(shortUrl) {
 }
 function getUser(id, user) {
   for (var urls in urlDatabase[user]) {
-      console.log(urls);
+    if(urlDatabase[user][urls])
     if (urls === id) {
       return true;
     }
   }
   return false;
 }
+
 
