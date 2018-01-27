@@ -11,8 +11,9 @@
         <table>
           <tr>
             <td width = "80"><label for="shortURL"><%= url %></label></td>
-            <td width = "200"><a href = <%= urls[userId][url] %> > <%= urls[userId][url] %></a></td>
+            <td width = "200"><a href = <%= urls[userId][url].longURL %> > <%= urls[userId][url].longURL %></a></td>
             <td width = "80"><a href = "/urls/<%= url %>/update"> Edit </a></td>
+            <td><label for="count"><%= urls[userId][url].count %></label></td>
             <td width = "20"><button type="submit" value="Delete">🗑️</button></td></br>
           </tr>
         </table>
